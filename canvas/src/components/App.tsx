@@ -1,21 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import Square from './components/Square'
-import styled from 'styled-components'
+import { S } from './App.styles';
+import { ISubmitDrawResult } from './App.interface';
 
-interface Props {
-  width: number;
-}
-
-interface ISubmitDrawResult {
-  text: string;
-  color: string;
-}
-
-const AppWrapper = styled.div<Props>`
-width: ${props => 42*props.width}px;
-display: flex;
-flex-wrap: wrap;
-`
 
 
 const App = () => {
@@ -25,14 +11,12 @@ const App = () => {
   const [canvasSize, setCanvasSize] = useState([])
 
 
-
-
   const getIndex = (x: number, y: number): number => {
     const width: number | string = canvasSize[0]
     return width*(y-1)+x-1
   }
 
-  const drawLine = (arr: {text: string; color: string}[], x1: number, y1: number, x2: number, y2: number) => {
+  const drawLine = (arr: ISubmitDrawResult[], x1: number, y1: number, x2: number, y2: number) => {
     const isVertical = x1 === x2
     const isHorizontal = y1 === y2
     const createVector = (a: number, b: number): Array<number> => [Math.min(a, b), Math.max(a, b)]
@@ -55,7 +39,7 @@ const App = () => {
   }
     
 
-  const drawRectangle = (arr: {text: string; color: string}[], x1: number, y1: number, x2: number, y2: number) => {
+  const drawRectangle = (arr: ISubmitDrawResult[], x1: number, y1: number, x2: number, y2: number) => {
     drawLine(arr,x1, y1, x2, y1)
     drawLine(arr,x2, y1, x2, y2)
     drawLine(arr,x2, y2, x1, y2)
@@ -74,7 +58,7 @@ const App = () => {
   }
 
   const fill = (
-    arr: {text: string; color: string}[], 
+    arr: ISubmitDrawResult[], 
     x: number | string, 
     y: number | string, 
     color: string) => {
@@ -125,7 +109,7 @@ const App = () => {
     
     if(canvasSize.length > 0 && dataInput.length > 0) {
       const [width, height]: (number | string)[] = canvasSize
-      const arr : {text: string; color: string}[] = new Array(width*height).fill('').map((e: {text: string; color: string}) => ({text: '', color: ''}))
+      const arr : ISubmitDrawResult[] = new Array(width*height).fill('').map((e: ISubmitDrawResult) => ({text: '', color: ''}))
  
 
       for (let i = 1; i <= dataInput.length - 1; i++) {
@@ -149,11 +133,11 @@ const App = () => {
 
 
   return (
-    <AppWrapper width={canvasSize[0]}>
-          {dataDraw.length > 0 ? dataDraw.map((el: {text: string; color: string}, index) => {
-            return (<Square color={el.color} key={index} text={el.text}/>)}) 
+    <S.AppWrapper width={canvasSize[0]}>
+          {dataDraw.length > 0 ? dataDraw.map((el: ISubmitDrawResult, index) => {
+            return (<S.Square color={el.color} key={index} >{el.text}</S.Square>)}) 
           : null}
-    </AppWrapper>
+    </S.AppWrapper>
   )
 }
 
